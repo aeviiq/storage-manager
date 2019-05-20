@@ -1,0 +1,33 @@
+{
+  "name": "aeviiq/storage-manager",
+  "type": "library",
+  "description": "Storage Manager Component",
+  "keywords": [
+    "storage",
+    "storage-manager"
+  ],
+  "homepage": "https://github.com/aeviiq/storage-manager",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Aeviiq Storage Manager contributors",
+      "homepage": "https://github.com/aeviiq/storage-manager/graphs/contributors"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Aeviiq\\StorageManager\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Aeviiq\\Tests\\StorageManager\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=7.2",
+    "ext-json": "*",
+    "symfony/http-foundation": "^4.2",
+    "myclabs/deep-copy": "^1.9"
+  }
+}
