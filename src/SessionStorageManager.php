@@ -4,7 +4,6 @@ namespace Aeviiq\StorageManager;
 
 use Aeviiq\StorageManager\Exception\InvalidArgumentException;
 use Aeviiq\StorageManager\Exception\UnexpectedValueException;
-use DeepCopy\DeepCopy;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 final class SessionStorageManager implements StorageManager
@@ -12,7 +11,7 @@ final class SessionStorageManager implements StorageManager
     /**
      * @var StorageManager
      */
-    private $storage;
+    private $memory;
 
     /**
      * @var SessionInterface
@@ -20,24 +19,17 @@ final class SessionStorageManager implements StorageManager
     private $session;
 
     /**
-     * @var DeepCopy
-     */
-    private $deepCopy;
-
-    /**
      * @var string The key used to keep track of all data keys this manager manages.
      */
     private $masterKey;
 
     public function __construct(
-        StorageManager $storage,
+        StorageManager $memory,
         SessionInterface $session,
-        DeepCopy $deepCopy,
         string $masterKey = 'storage.manager.session.master.key'
     ) {
-        $this->storage = $storage;
+        $this->memory = $memory;
         $this->session = $session;
-        $this->deepCopy = $deepCopy;
         $this->masterKey = $masterKey;
     }
 
@@ -47,9 +39,8 @@ final class SessionStorageManager implements StorageManager
             throw InvalidArgumentException::saveKeySameAsMasterKey($this, $key);
         }
 
-        $this->storage->save($key, $data);
-        $snapshot = $this->deepCopy->copy($data);
-        $this->session->set($key, $snapshot);
+        $this->memory->save($key, $data);
+        $this->session->set($key, $this->memory->load($key));
 
         $keys = $this->session->get($this->masterKey, []);
         $keys[] = $key;
@@ -64,8 +55,8 @@ final class SessionStorageManager implements StorageManager
             throw InvalidArgumentException::dataKeyDoesNotExist($this, $key);
         }
 
-        if ($this->storage->has($key)) {
-            return $this->storage->load($key);
+        if ($this->memory->has($key)) {
+            return $this->memory->load($key);
         }
 
         $data = $this->session->get($key);
@@ -74,10 +65,10 @@ final class SessionStorageManager implements StorageManager
             throw UnexpectedValueException::storageDataExpectedToBeObject($this, $key);
         }
 
-        $snapshot = $this->deepCopy->copy($data);
-        $this->storage->save($key, $snapshot);
+        // Store the retrieved data in memory, so any further calls will retrieve it from there.
+        $this->memory->save($key, $data);
 
-        return $snapshot;
+        return $this->memory->load($key);
     }
 
     public function has(string $key): bool
@@ -88,7 +79,7 @@ final class SessionStorageManager implements StorageManager
     public function remove(string $key): void
     {
         $this->session->remove($key);
-        $this->storage->remove($key);
+        $this->memory->remove($key);
     }
 
     public function clear(): void
@@ -97,6 +88,6 @@ final class SessionStorageManager implements StorageManager
             $this->session->remove($key);
         }
 
-        $this->storage->clear();
+        $this->memory->clear();
     }
 }
