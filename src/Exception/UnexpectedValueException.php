@@ -6,6 +6,6 @@ final class UnexpectedValueException extends \UnexpectedValueException implement
 {
     public static function storageDataExpectedToBeObject(object $subject, string $key): UnexpectedValueException
     {
-        return new static(sprintf('The data with key "%s" in "%s" must be an object.', $key, get_class($subject)));
+        return new static(\sprintf('The data with key "%s" in "%s" must be an object.', $key, \get_class($subject)));
     }
 }
