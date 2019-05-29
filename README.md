@@ -42,9 +42,10 @@ final class FooController
         $repository = $em->getRepository(Foo::class);
         $foo = $repository->find(1);
         $bar = new Bar('some value', 1234, $foo);
+        
+        $this->storageManager->save('some_key', $bar);
         // A copy of $bar is saved and the entity is converted to a StorableEntity.
         // The actual entity/proxy itself does not get saved into the session.
-        $this->storageManager->save('some_key', $bar);
         // $bar is untouched and can be used like normal.
         // Any changes done to $bar after the save() will not be stored without
         // and explicit save() call.
