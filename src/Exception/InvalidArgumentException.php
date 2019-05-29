@@ -13,4 +13,9 @@ final class InvalidArgumentException extends \InvalidArgumentException implement
     {
         return new static(\sprintf('The save key "%s" cannot be the same as the master key in "%s".', \get_class($subject), $key));
     }
+
+    public static function masterKeyCanNotBeRemoved(object $subject, string $key): InvalidArgumentException
+    {
+        return new static(\sprintf('The master key "%s" in "%s" cannot be used in a remove(). Use the clear() instead.', \get_class($subject), $key));
+    }
 }
