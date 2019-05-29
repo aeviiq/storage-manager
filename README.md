@@ -13,7 +13,7 @@ composer require aeviiq/storage-manager
 
 ## Declaration
 ##### With the Symfony service container
-```php
+```yaml
 // config/services.yml
 DeepCopy\DeepCopy: ~
 
