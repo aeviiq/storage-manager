@@ -3,7 +3,7 @@
 ## Why
 To provide an easy way to store data with references to proxies, without
 storing the proxies themselves. A deep copy of the original object is made, in which 
-any proxies will be turned into a StorableEntity, which contains only the proxy class 
+any proxies will be turned into a StorableEntity, which contains only the proxy class name 
 and it's identifiers. These will be used to retrieve a managed proxy upon load().
 
 ## Installation
