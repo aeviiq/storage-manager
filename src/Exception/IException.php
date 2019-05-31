@@ -2,6 +2,6 @@
 
 namespace Aeviiq\StorageManager\Exception;
 
-interface IException
+interface IException extends \Throwable
 {
 }
