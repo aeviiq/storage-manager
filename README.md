@@ -17,9 +17,9 @@ composer require aeviiq/storage-manager
 // config/services.yml
 DeepCopy\DeepCopy: ~
 
-Aeviiq\StorageManager\IStorageManager: '@Aeviiq\StorageManager\StorageManager'
+Aeviiq\StorageManager\IStorageManager: '@Aeviiq\StorageManager\DefaultStorageManager'
     
-Aeviiq\StorageManager\StorageManager:
+Aeviiq\StorageManager\DefaultStorageManager:
     autowire: true
 ```
 
