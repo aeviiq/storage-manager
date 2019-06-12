@@ -17,7 +17,7 @@ composer require aeviiq/storage-manager
 // config/services.yml
 DeepCopy\DeepCopy: ~
 
-Aeviiq\StorageManager\IStorageManager: '@Aeviiq\StorageManager\DefaultStorageManager'
+Aeviiq\StorageManager\StorageManager: '@Aeviiq\StorageManager\DefaultStorageManager'
     
 Aeviiq\StorageManager\DefaultStorageManager:
     autowire: true
@@ -28,11 +28,11 @@ Aeviiq\StorageManager\DefaultStorageManager:
 final class FooController
 {
     /**
-     * @var IStorageManager
+     * @var StorageManager
      */
     private $storageManager;
 
-    public function __construct(IStorageManager $storageManager)
+    public function __construct(StorageManager $storageManager)
     {
         $this->storageManager = $storageManager;
     }

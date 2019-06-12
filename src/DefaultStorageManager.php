@@ -12,7 +12,7 @@ use DeepCopy\DeepCopy;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-final class DefaultStorageManager implements IStorageManager
+final class DefaultStorageManager implements StorageManager
 {
     /**
      * @var DeepCopy

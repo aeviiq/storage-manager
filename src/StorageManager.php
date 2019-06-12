@@ -5,7 +5,7 @@ namespace Aeviiq\StorageManager;
 use Aeviiq\StorageManager\Exception\InvalidArgumentException;
 use Aeviiq\StorageManager\Exception\UnexpectedValueException;
 
-interface IStorageManager
+interface StorageManager
 {
     /**
      * Save a deep copy of the data. Any entities that are present, will be detached from the UnitOfWork.
