@@ -2,7 +2,7 @@
 
 namespace Aeviiq\StorageManager\Exception;
 
-final class LogicException extends \LogicException implements IException
+final class LogicException extends \LogicException implements Throwable
 {
     public static function entityMustBePersistedAndFlushed(string $entity): LogicException
     {
