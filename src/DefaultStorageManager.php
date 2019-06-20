@@ -32,14 +32,16 @@ final class DefaultStorageManager implements StorageManager
     public function __construct(
         DeepCopy $deepCopy,
         SessionInterface $session,
-        ObjectManager $objectManager,
+        ?ObjectManager $objectManager = null,
         string $masterKey = 'storage.manager.session.master.key'
     ) {
         $this->deepCopy = $deepCopy;
         $this->session = $session;
         $this->masterKey = $masterKey;
-        $this->deepCopy->addFilter(new DoctrineEntityReplaceFilter($objectManager), new DoctrineEntityMatcher($objectManager));
-        $this->deepCopy->addFilter(new StorableEntityReplaceFilter($objectManager), new StorableEntityMatcher());
+        if (null !== $objectManager) {
+            $this->deepCopy->addFilter(new DoctrineEntityReplaceFilter($objectManager), new DoctrineEntityMatcher($objectManager));
+            $this->deepCopy->addFilter(new StorableEntityReplaceFilter($objectManager), new StorableEntityMatcher());
+        }
     }
 
     public function save(string $key, object $data): void

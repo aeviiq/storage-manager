@@ -8,9 +8,10 @@ use Aeviiq\StorageManager\Exception\UnexpectedValueException;
 interface StorageManager
 {
     /**
-     * Save a deep copy of the data. Any entities that are present, will be detached from the UnitOfWork.
-     * Their identifiers and values will be stored instead. Upon loading, these will be used to retrieve
-     * the actual entities. This ofcourse means that these objects are read-only, as the entity management
+     * Save a deep copy of the data. If an object manager is injected, any entities that are present,
+     * will be detached from the UnitOfWork. Their identifiers and values will be stored instead.
+     * Upon loading, these will be used to retrieve the actual entities.
+     * This ofcourse means that these objects are read-only, as the entity management
      * should be done by the entity manager.
      *
      * @param string $key  The key under which the data will be stored.
