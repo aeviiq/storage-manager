@@ -3,7 +3,7 @@
 ## Why
 To provide an easy way to store data with references to proxies, without
 storing the proxies themselves. A deep copy of the original object is made, in which 
-any proxies will be turned into a StorableEntity, which contains only the proxy class 
+any proxies will be turned into a StorableEntity, which contains only the proxy class name 
 and it's identifiers. These will be used to retrieve a managed proxy upon load().
 
 ## Installation
@@ -17,9 +17,9 @@ composer require aeviiq/storage-manager
 // config/services.yml
 DeepCopy\DeepCopy: ~
 
-Aeviiq\StorageManager\IStorageManager: '@Aeviiq\StorageManager\StorageManager'
+Aeviiq\StorageManager\StorageManager: '@Aeviiq\StorageManager\DefaultStorageManager'
     
-Aeviiq\StorageManager\StorageManager:
+Aeviiq\StorageManager\DefaultStorageManager:
     autowire: true
 ```
 
@@ -28,11 +28,11 @@ Aeviiq\StorageManager\StorageManager:
 final class FooController
 {
     /**
-     * @var IStorageManager
+     * @var StorageManager
      */
     private $storageManager;
 
-    public function __construct(IStorageManager $storageManager)
+    public function __construct(StorageManager $storageManager)
     {
         $this->storageManager = $storageManager;
     }

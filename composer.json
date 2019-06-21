@@ -26,7 +26,6 @@
     },
     "require": {
         "php": "^7.2",
-        "ext-json": "*",
         "symfony/http-foundation": "^3.4|^4.2",
         "myclabs/deep-copy": "^1.9",
         "doctrine/persistence": "^1.1"
