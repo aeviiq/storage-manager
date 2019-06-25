@@ -47,7 +47,7 @@ interface StorageManager
     public function remove(string $key): void;
 
     /**
-     * Removes all data that this manager stored by using the master key.
+     * Removes all data that this manager stored, using the master key.
      */
     public function clear(): void;
 }
