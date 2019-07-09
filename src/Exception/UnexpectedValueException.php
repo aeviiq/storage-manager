@@ -2,7 +2,7 @@
 
 namespace Aeviiq\StorageManager\Exception;
 
-final class UnexpectedValueException extends \UnexpectedValueException implements Throwable
+final class UnexpectedValueException extends \UnexpectedValueException implements ExceptionInterface
 {
     public static function storageDataExpectedToBeObject(object $subject, string $key): UnexpectedValueException
     {

@@ -2,52 +2,101 @@
 
 namespace Aeviiq\StorageManager;
 
+use Aeviiq\StorageManager\DeepCopy\Filter\DoctrineEntityReplaceFilter;
+use Aeviiq\StorageManager\DeepCopy\Filter\StorableEntityReplaceFilter;
+use Aeviiq\StorageManager\DeepCopy\Matcher\DoctrineEntityMatcher;
+use Aeviiq\StorageManager\DeepCopy\Matcher\StorableEntityMatcher;
 use Aeviiq\StorageManager\Exception\InvalidArgumentException;
 use Aeviiq\StorageManager\Exception\UnexpectedValueException;
+use DeepCopy\DeepCopy;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-interface StorageManager
+final class StorageManager implements StorageManagerInterface
 {
     /**
-     * Save a deep copy of the data. If an object manager is injected, any entities that are present,
-     * will be detached from the UnitOfWork. Their identifiers and values will be stored instead.
-     * Upon loading, these will be used to retrieve the actual entities.
-     * This ofcourse means that these objects are read-only, as the entity management
-     * should be done by the entity manager.
-     *
-     * @param string $key  The key under which the data will be stored.
-     * @param object $data The data being stored.
-     *
-     * @throws InvalidArgumentException If the key is invalid.
+     * @var DeepCopy
      */
-    public function save(string $key, object $data): void;
+    private $deepCopy;
 
     /**
-     * Returns a previous stored snapshot of the data. This will be a deep copy of the stored data,
-     * to prevent referential changes without an explicit save() call. In case the saved data had
-     * entities present, these will be automatically loaded and set back to the property they belonged
-     * to before the save() occured.
-     *
-     * @param string $key The key under which the data is stored.
-     *
-     * @throws InvalidArgumentException If the key is invalid.
-     * @throws UnexpectedValueException If the stored data is not of the expected value.
+     * @var SessionInterface
      */
-    public function load(string $key): object;
+    private $session;
 
     /**
-     * Checks whether the given key exists.
+     * @var string The key used to keep track of all data keys this manager manages.
      */
-    public function has(string $key): bool;
+    private $masterKey;
 
-    /**
-     * Removes the saved data with the given key.
-     *
-     * @throws InvalidArgumentException If the key is invalid..
-     */
-    public function remove(string $key): void;
+    public function __construct(
+        DeepCopy $deepCopy,
+        SessionInterface $session,
+        ?ObjectManager $objectManager = null,
+        string $masterKey = 'storage.manager.session.master.key'
+    ) {
+        $this->deepCopy = $deepCopy;
+        $this->session = $session;
+        $this->masterKey = $masterKey;
+        if (null !== $objectManager) {
+            $this->deepCopy->addFilter(new DoctrineEntityReplaceFilter($objectManager), new DoctrineEntityMatcher($objectManager));
+            $this->deepCopy->addFilter(new StorableEntityReplaceFilter($objectManager), new StorableEntityMatcher());
+        }
+    }
 
-    /**
-     * Removes all data that this manager stored, using the master key.
-     */
-    public function clear(): void;
+    public function save(string $key, object $data): void
+    {
+        if ($this->masterKey === $key) {
+            throw InvalidArgumentException::saveKeySameAsMasterKey($this, $key);
+        }
+
+        // Ensure a snapshot is saved to prevent changes by reference without an explicit save() call.
+        $snapshot = $this->deepCopy->copy($data);
+        $this->session->set($key, $snapshot);
+        $this->storeUsedKey($key);
+    }
+
+    public function load(string $key): object
+    {
+        if (!$this->has($key)) {
+            throw InvalidArgumentException::dataKeyDoesNotExist($this, $key);
+        }
+
+        $data = $this->session->get($key);
+        if (!\is_object($data)) {
+            // Session data overriden by reference.
+            throw UnexpectedValueException::storageDataExpectedToBeObject($this, $key);
+        }
+
+        return $this->deepCopy->copy($data);
+    }
+
+    public function has(string $key): bool
+    {
+        return $this->session->has($key);
+    }
+
+    public function remove(string $key): void
+    {
+        if ($this->masterKey === $key) {
+            throw InvalidArgumentException::masterKeyCanNotBeRemoved($this, $key);
+        }
+
+        $this->session->remove($key);
+    }
+
+    public function clear(): void
+    {
+        foreach ($this->session->get($this->masterKey, []) as $key => $value) {
+            $this->remove($key);
+        }
+    }
+
+    private function storeUsedKey(string $key): void
+    {
+        $keys = $this->session->get($this->masterKey, []);
+        $keys[$key] = true;
+
+        $this->session->set($this->masterKey, $keys);
+    }
 }

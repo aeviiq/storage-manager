@@ -5,6 +5,6 @@ namespace Aeviiq\StorageManager\Exception;
 /**
  * Base exception marker for this component.
  */
-interface Throwable extends \Throwable
+interface ExceptionInterface extends \Throwable
 {
 }

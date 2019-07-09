@@ -2,7 +2,7 @@
 
 namespace Aeviiq\StorageManager\Exception;
 
-final class InvalidArgumentException extends \InvalidArgumentException implements Throwable
+final class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
     public static function dataKeyDoesNotExist(object $subject, string $key): InvalidArgumentException
     {
