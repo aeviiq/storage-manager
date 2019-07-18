@@ -15,7 +15,8 @@ composer require aeviiq/storage-manager
 ##### With the Symfony service container
 ```yaml
 // config/services.yml
-DeepCopy\DeepCopy: ~
+DeepCopy\DeepCopy:
+    shared: false
 
 Aeviiq\StorageManager\StorageManagerInterface: '@Aeviiq\StorageManager\StorageManager'
     
