@@ -4,12 +4,12 @@ namespace Aeviiq\StorageManager\DeepCopy\Filter;
 
 use Aeviiq\StorageManager\Exception\LogicException;
 use Aeviiq\StorageManager\StorableEntity;
-use DeepCopy\Filter\Filter;
 use DeepCopy\Reflection\ReflectionHelper;
+use DeepCopy\TypeFilter\TypeFilter;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\Proxy;
 
-final class DoctrineEntityReplaceFilter implements Filter
+final class DoctrineEntityTypeFilter implements TypeFilter
 {
     /**
      * @var ObjectManager
@@ -22,24 +22,20 @@ final class DoctrineEntityReplaceFilter implements Filter
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function apply($object, $property, $objectCopier): void
+    public function apply($element)
     {
-        $reflectionProperty = ReflectionHelper::getProperty($object, $property);
-        $reflectionProperty->setAccessible(true);
-        $entity = $reflectionProperty->getValue($object);
-        $class = ($entity instanceof Proxy) ? \get_parent_class($entity) : \get_class($entity);
-
+        $class = ($element instanceof Proxy) ? \get_parent_class($element) : \get_class($element);
         $metadata = $this->objectManager->getClassMetadata($class);
         $entityIdentifiers = $metadata->getIdentifier();
 
         $identifiers = [];
         $identifierPresent = false;
         foreach ($entityIdentifiers as $entityIdentifier) {
-            $identifier = ReflectionHelper::getProperty($entity, $entityIdentifier);
+            $identifier = ReflectionHelper::getProperty($element, $entityIdentifier);
             $identifier->setAccessible(true);
-            $value = $identifier->getValue($entity);
+            $value = $identifier->getValue($element);
             if (null !== $value) {
                 $identifierPresent = true;
             }
@@ -47,10 +43,10 @@ final class DoctrineEntityReplaceFilter implements Filter
             $identifiers[$entityIdentifier] = $value;
         }
 
-        if (!$this->objectManager->contains($entity) || !$identifierPresent) {
+        if (!$this->objectManager->contains($element) || !$identifierPresent) {
             throw LogicException::entityMustBePersistedAndFlushed($class);
         }
 
-        $reflectionProperty->setValue($object, new StorableEntity($class, $identifiers));
+        return new StorableEntity($class, $identifiers);
     }
 }
