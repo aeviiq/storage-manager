@@ -2,14 +2,15 @@
 
 namespace Aeviiq\StorageManager;
 
-use Aeviiq\StorageManager\DeepCopy\Filter\DoctrineEntityReplaceFilter;
-use Aeviiq\StorageManager\DeepCopy\Filter\StorableEntityReplaceFilter;
-use Aeviiq\StorageManager\DeepCopy\Matcher\DoctrineEntityMatcher;
-use Aeviiq\StorageManager\DeepCopy\Matcher\StorableEntityMatcher;
+use Aeviiq\StorageManager\DeepCopy\Filter\DoctrineEntityTypeFilter;
+use Aeviiq\StorageManager\DeepCopy\Filter\StorableEntityTypeFilter;
+use Aeviiq\StorageManager\DeepCopy\Matcher\DoctrineEntityTypeMatcher;
+use Aeviiq\StorageManager\DeepCopy\Matcher\StorableEntityTypeMatcher;
 use Aeviiq\StorageManager\Exception\InvalidArgumentException;
 use Aeviiq\StorageManager\Exception\UnexpectedValueException;
 use DeepCopy\DeepCopy;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\Proxy;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 final class StorageManager implements StorageManagerInterface
@@ -39,8 +40,8 @@ final class StorageManager implements StorageManagerInterface
         $this->session = $session;
         $this->masterKey = $masterKey;
         if (null !== $objectManager) {
-            $this->deepCopy->addFilter(new DoctrineEntityReplaceFilter($objectManager), new DoctrineEntityMatcher($objectManager));
-            $this->deepCopy->addFilter(new StorableEntityReplaceFilter($objectManager), new StorableEntityMatcher());
+            $this->deepCopy->addTypeFilter(new DoctrineEntityTypeFilter($objectManager), new DoctrineEntityTypeMatcher(Proxy::class, $objectManager));
+            $this->deepCopy->addTypeFilter(new StorableEntityTypeFilter($objectManager), new StorableEntityTypeMatcher());
         }
     }
 
