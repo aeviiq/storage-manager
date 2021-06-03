@@ -1,10 +1,10 @@
 # Storage Manager Component
 
 ## Why
-To provide an easy way to store data with references to proxies, without
-storing the proxies themselves. A deep copy of the original object is made, in which 
-any proxies will be turned into a StorableEntity, which contains only the proxy class name 
-and it's identifiers. These will be used to retrieve a managed proxy upon load().
+
+To provide an easy way to store data with references to proxies, without storing the proxies themselves. A deep copy of the original object is made, in which
+any proxies will be turned into a StorableEntity, which contains only the proxy class name and it's identifiers. These will be used to retrieve a managed proxy
+upon load().
 
 ## Installation
 ```
@@ -19,7 +19,11 @@ DeepCopy\DeepCopy:
     shared: false
 
 Aeviiq\StorageManager\StorageManagerInterface: '@Aeviiq\StorageManager\StorageManager'
-    
+Aeviiq\StorageManager\StoreInterface: '@Aeviiq\StorageManager\RequestStore'
+
+Aeviiq\StorageManager\RequestStore:
+    autowire: true
+
 Aeviiq\StorageManager\StorageManager:
     autowire: true
 ```
