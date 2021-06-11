@@ -36,7 +36,7 @@ final class SessionStore implements StoreInterface
 
     public function get(string $key): object
     {
-        $item = $this->session->get($this->masterKey);
+        $item = $this->session->get($key);
         if (null === $item) {
             InvalidArgumentException::dataKeyDoesNotExist($this, $key);
         }
