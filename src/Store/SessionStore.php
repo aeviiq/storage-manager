@@ -36,7 +36,7 @@ final class SessionStore implements StoreInterface
 
     public function get(string $key): object
     {
-        $item = $this->session->get($this->masterKey);
+        $item = $this->session->get($key);
         if (null === $item) {
             InvalidArgumentException::dataKeyDoesNotExist($this, $key);
         }
@@ -75,7 +75,7 @@ final class SessionStore implements StoreInterface
         $keys = $this->keys();
         $index = array_search($key, $keys);
         if (null !== $index) {
-            unset($keys[$key]);
+            unset($keys[$index]);
             $this->session->set($this->masterKey, $keys);
         }
     }
