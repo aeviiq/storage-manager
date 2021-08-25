@@ -3,8 +3,8 @@
 namespace Aeviiq\StorageManager\DeepCopy\Matcher;
 
 use DeepCopy\TypeMatcher\TypeMatcher;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\Proxy;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\Proxy;
 
 final class DoctrineEntityTypeMatcher extends TypeMatcher
 {

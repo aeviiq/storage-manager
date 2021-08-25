@@ -6,8 +6,8 @@ use Aeviiq\StorageManager\Exception\LogicException;
 use Aeviiq\StorageManager\StorableEntity;
 use DeepCopy\Reflection\ReflectionHelper;
 use DeepCopy\TypeFilter\TypeFilter;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\Proxy;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\Proxy;
 
 final class DoctrineEntityTypeFilter implements TypeFilter
 {
