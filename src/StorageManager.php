@@ -8,8 +8,8 @@ use Aeviiq\StorageManager\DeepCopy\Matcher\DoctrineEntityTypeMatcher;
 use Aeviiq\StorageManager\DeepCopy\Matcher\StorableEntityTypeMatcher;
 use Aeviiq\StorageManager\Store\StoreInterface;
 use DeepCopy\DeepCopy;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\Proxy;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\Proxy;
 
 final class StorageManager implements StorageManagerInterface
 {

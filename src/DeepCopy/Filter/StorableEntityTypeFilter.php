@@ -5,7 +5,7 @@ namespace Aeviiq\StorageManager\DeepCopy\Filter;
 use Aeviiq\StorageManager\Exception\UnexpectedValueException;
 use Aeviiq\StorageManager\StorableEntity;
 use DeepCopy\TypeFilter\TypeFilter;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 final class StorableEntityTypeFilter implements TypeFilter
 {
