@@ -1,21 +1,28 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Aeviiq\StorageManager\Exception;
 
 final class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
-    public static function dataKeyDoesNotExist(object $subject, string $key): InvalidArgumentException
+    public static function dataKeyDoesNotExist(string $key): InvalidArgumentException
     {
-        return new static(\sprintf('"%s" does not have data stored with key "%s".', \get_class($subject), $key));
+        return new self(\sprintf('Data with key "%s" does not exist.', $key));
     }
 
-    public static function saveKeySameAsMasterKey(object $subject, string $key): InvalidArgumentException
+    public static function saveKeySameAsMasterKey(string $key): InvalidArgumentException
     {
-        return new static(\sprintf('The save key "%s" cannot be the same as the master key in "%s".', \get_class($subject), $key));
+        return new self(\sprintf('The save key "%s" cannot be the same as the master key.', $key));
     }
 
-    public static function masterKeyCanNotBeRemoved(object $subject, string $key): InvalidArgumentException
+    public static function masterKeyCanNotBeRemoved(string $key): InvalidArgumentException
     {
-        return new static(\sprintf('The master key "%s" in "%s" cannot be used in a remove(). Use the clear() instead.', \get_class($subject), $key));
+        return new self(\sprintf('The master key "%s" cannot be used in a single remove.', $key));
+    }
+
+    public static function invalidArgumentType(string $expectedType, mixed $actual): InvalidArgumentException
+    {
+        return new self(\sprintf('Expected type "%s", "%s" given.', $expectedType, gettype($actual)));
     }
 }
