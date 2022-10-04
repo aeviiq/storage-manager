@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Aeviiq\StorageManager;
 
@@ -11,7 +13,7 @@ interface StorageManagerInterface
      * Save a deep copy of the data. If an object manager is injected, any entities that are present,
      * will be detached from the UnitOfWork. Their identifiers and values will be stored instead.
      * Upon loading, these will be used to retrieve the actual entities.
-     * This ofcourse means that these objects are read-only, as the entity management
+     * This of course means that these objects are read-only, as the entity management
      * should be done by the entity manager.
      *
      * @param string $key  The key under which the data will be stored.
@@ -24,8 +26,7 @@ interface StorageManagerInterface
     /**
      * Returns a previous stored snapshot of the data. This will be a deep copy of the stored data,
      * to prevent referential changes without an explicit save() call. In case the saved data had
-     * entities present, these will be automatically loaded and set back to the property they belonged
-     * to before the save() occured.
+     * entities present, these will be automatically loaded and attached.
      *
      * @param string $key The key under which the data is stored.
      *

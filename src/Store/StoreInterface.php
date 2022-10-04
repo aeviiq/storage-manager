@@ -7,7 +7,7 @@ namespace Aeviiq\StorageManager\Store;
 interface StoreInterface
 {
     /**
-     * @return list<string>
+     * @return array<string>
      */
     public function keys(): array;
 
