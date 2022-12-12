@@ -50,7 +50,7 @@ final class EntityDetachFilter implements TypeFilter
     /**
      * @param ClassMetadata<object> $classMetadata
      *
-     * @return array <string, string>
+     * @return mixed[]
      */
     private function extractIdentifiers(ClassMetadata $classMetadata, object $element): array
     {
@@ -58,6 +58,14 @@ final class EntityDetachFilter implements TypeFilter
         foreach ($classMetadata->getIdentifier() as $entityIdentifier) {
             $identifier = ReflectionHelper::getProperty($element, $entityIdentifier);
             $value = $identifier->getValue($element);
+            if (\is_object($value)) {
+                $class = ClassUtils::getRealClass(\get_class($value));
+                if (!$this->objectManager->getMetadataFactory()->isTransient($class)) {
+                    $identifiers[$entityIdentifier] = $this->extractIdentifiers($this->objectManager->getClassMetadata($class), $value);
+                    continue;
+                }
+            }
+
             if (!\is_scalar($value)) {
                 throw UnexpectedValueException::entityIdentifiersAreNotScalarType($value);
             }
